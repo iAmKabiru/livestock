@@ -4,7 +4,7 @@ from django.dispatch import receiver
 from django.db.models import F, Sum
 
 class BirdType(models.Model):
-	bird_type = models.CharField(max_length=255)
+	bird_type = models.CharField(max_length=255, verbose_name="Livetocks")
 
 	def __str__(self):
 		return self.bird_type
@@ -12,23 +12,32 @@ class BirdType(models.Model):
 	def quantity(self):
 		return self.birds_set.count()
 
+	class Meta:
+		verbose_name = 'Animal Type'
+		verbose_name_plural = 'Animal Types'
+
 
 class Birds(models.Model):
-	bird_type = models.ForeignKey(BirdType, on_delete=models.CASCADE)
+	bird_type = models.ForeignKey(BirdType, on_delete=models.CASCADE, verbose_name="Animals")
 	description = models.CharField(max_length = 255)
 	quantity = models.IntegerField()
 	date = models.DateTimeField(auto_now_add=True)
-	cost_per_bird = models.IntegerField(default=0, verbose_name = 'cost per bird (N)')
+	cost_per_bird = models.IntegerField(default=0, verbose_name = 'cost per Animal (N)')
 
 	class Meta:
-		verbose_name_plural = 'Birds'
+		verbose_name = 'Animals'
+		verbose_name_plural = 'Animals'
 
 	def __str__(self):
 		return self.description
 
+	class Meta:
+		verbose_name = 'Animal'
+		verbose_name_plural = 'Animals'
+
 
 class Feed(models.Model):
-	bird = models.ForeignKey(Birds, on_delete=models.CASCADE)
+	bird = models.ForeignKey(Birds, on_delete=models.CASCADE, verbose_name="Animal")
 	description = models.CharField(max_length=255)
 	date = models.DateTimeField(auto_now_add=True)
 
@@ -38,7 +47,7 @@ class Feed(models.Model):
 
 
 class Medication(models.Model):
-	bird  = models.ForeignKey(Birds, on_delete=models.CASCADE)
+	bird  = models.ForeignKey(Birds, on_delete=models.CASCADE, verbose_name="Animals")
 	description = models.CharField(max_length=255)
 	remark = models.TextField(blank=True, null=True)
 	prescription = models.TextField(null=True, blank=True)
@@ -50,7 +59,7 @@ class Medication(models.Model):
 
 
 class Sales(models.Model):
-	birds = models.ForeignKey(Birds, on_delete=models.CASCADE)
+	birds = models.ForeignKey(Birds, on_delete=models.CASCADE, verbose_name="Animals")
 	quantity = models.IntegerField()
 	selling_price = models.IntegerField(verbose_name = 'selling price (N)')
 
@@ -86,7 +95,7 @@ class DoctorVisit(models.Model):
 class MedicalReport(models.Model):
 	case = models.CharField(max_length=255)
 	description = models.TextField()
-	birds = models.ForeignKey(Birds, on_delete=models.CASCADE, blank=True, null=True)
+	birds = models.ForeignKey(Birds, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Animals")
 	date = models.DateTimeField(auto_now_add = True)
 	remark = models.TextField( null=True, blank=True)
 	prescription = models.TextField(null=True, blank=True)
@@ -97,7 +106,7 @@ class MedicalReport(models.Model):
 class Purchase(models.Model):
 	purchase_type_choices = (
 		('feed', 'feed'),
-		('birds', 'birds'),
+		('animals', 'animals'),
 		('medicine', 'medicine'),
 		('equipement', 'equipement')
 		)
@@ -113,7 +122,7 @@ class Casualty(models.Model):
 		('death','death'),
 		('injury', 'injury'),
 		)
-	birds = models.ForeignKey(Birds, on_delete=models.CASCADE)
+	birds = models.ForeignKey(Birds, on_delete=models.CASCADE, verbose_name = "Animals")
 	casualty_type = models.CharField(max_length=255, choices = casualty_type_choices)
 	quantity = models.IntegerField(default=0)
 	date = models.DateTimeField(auto_now_add=True)

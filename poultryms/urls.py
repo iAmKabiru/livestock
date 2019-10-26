@@ -23,5 +23,5 @@ urlpatterns = [
 
 ]
 
-admin.site.site_header = "Poultry Management System"
-admin.site.site_title = "Poultry"
+admin.site.site_header = "Livestock Management System"
+admin.site.site_title = "Livestock"
